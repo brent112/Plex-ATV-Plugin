@@ -291,6 +291,7 @@ NSString * const MachineNameKey = @"PlexMachineName";
 					[nameWithPms release];
 				}
 			}
+            [categoryPath release];
 			[categoryName release];
 		}
 		[machineID release];
