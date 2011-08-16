@@ -14,33 +14,12 @@
 
 #define PLEX_SYNTHESIZE_SINGLETON_FOR_CLASS(classname) \
 \
-static classname *shared##classname = nil; \
-\
 + (classname *)shared##classname \
 { \
-@synchronized(self) \
-{ \
-if (shared##classname == nil) \
-{ \
-shared##classname = [[self alloc] init]; \
-} \
-} \
-\
+static classname *shared##classname; \
+static dispatch_once_t *once_token; \
+dispatch_once(once_token, ^{ shared##classname = [[self alloc] init]; }); \
 return shared##classname; \
-} \
-\
-+ (id)allocWithZone:(NSZone *)zone \
-{ \
-@synchronized(self) \
-{ \
-if (shared##classname == nil) \
-{ \
-shared##classname = [super allocWithZone:zone]; \
-return shared##classname; \
-} \
-} \
-\
-return nil; \
 } \
 \
 - (id)copyWithZone:(NSZone *)zone \
@@ -56,13 +35,4 @@ return self; \
 - (NSUInteger)retainCount \
 { \
 return NSUIntegerMax; \
-} \
-\
-- (void)release \
-{ \
-} \
-\
-- (id)autorelease \
-{ \
-return self; \
 }
